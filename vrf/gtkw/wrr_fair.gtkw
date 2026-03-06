@@ -1,0 +1,71 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Fri Mar  6 13:55:40 2026
+[*]
+[dumpfile] "/Users/zhehuang/projects/open_digital_lib/vrf/dump.vcd"
+[dumpfile_mtime] "Fri Mar  6 13:34:10 2026"
+[dumpfile_size] 8376
+[savefile] "/Users/zhehuang/projects/open_digital_lib/vrf/gtkw/wrr_fair.gtkw"
+[timestart] 64300
+[size] 1424 600
+[pos] -1 -1
+*-14.306575 355000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[sst_width] 255
+[signals_width] 177
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@28
+ODL_wrr_fair.clk_i
+ODL_wrr_fair.rst_ni
+@24
+ODL_wrr_fair.wt_i[0][4:0]
+ODL_wrr_fair.wt_i[1][4:0]
+ODL_wrr_fair.wt_i[2][4:0]
+ODL_wrr_fair.wt_i[3][4:0]
+ODL_wrr_fair.wt_i[4][4:0]
+ODL_wrr_fair.wt_i[5][4:0]
+ODL_wrr_fair.wt_i[6][4:0]
+ODL_wrr_fair.wt_i[7][4:0]
+@200
+-phase control
+@24
+ODL_wrr_fair.phase_counter[4:0]
+@28
+ODL_wrr_fair.phase_miss
+ODL_wrr_fair.phase_end
+ODL_wrr_fair.miss_history[4:0]
+ODL_wrr_fair.round_end
+@200
+-req->gnt
+@c00028
+ODL_wrr_fair.req_i[7:0]
+@28
+(0)ODL_wrr_fair.req_i[7:0]
+(1)ODL_wrr_fair.req_i[7:0]
+(2)ODL_wrr_fair.req_i[7:0]
+(3)ODL_wrr_fair.req_i[7:0]
+(4)ODL_wrr_fair.req_i[7:0]
+(5)ODL_wrr_fair.req_i[7:0]
+(6)ODL_wrr_fair.req_i[7:0]
+(7)ODL_wrr_fair.req_i[7:0]
+@1401200
+-group_end
+@28
+ODL_wrr_fair.match_phase[7:0]
+ODL_wrr_fair.vld_req[7:0]
+ODL_wrr_fair.unvisit[7:0]
+@c00028
+ODL_wrr_fair.gnt_o[7:0]
+@28
+(0)ODL_wrr_fair.gnt_o[7:0]
+(1)ODL_wrr_fair.gnt_o[7:0]
+(2)ODL_wrr_fair.gnt_o[7:0]
+(3)ODL_wrr_fair.gnt_o[7:0]
+(4)ODL_wrr_fair.gnt_o[7:0]
+(5)ODL_wrr_fair.gnt_o[7:0]
+(6)ODL_wrr_fair.gnt_o[7:0]
+(7)ODL_wrr_fair.gnt_o[7:0]
+@1401200
+-group_end
+[pattern_trace] 1
+[pattern_trace] 0
