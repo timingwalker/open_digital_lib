@@ -40,6 +40,7 @@ module ODL_wrr_fair #(
     //  SIGNAL DEFINE
     // ----------------------------------------------------------------------
     logic                       phase_end;
+    logic                       phase_miss;
     logic                       round_end;
     logic [PCNT_WIDTH-1:0]      phase_counter;
     logic [PCNT_WIDTH:0]        pcnt_pre;
@@ -63,7 +64,7 @@ module ODL_wrr_fair #(
     // ----------------------------------------------------------------------
     //  round: a complete WRR scheduling, which is spilt into several phases
     // ----------------------------------------------------------------------
-    assign phase_end = vld_req==gnt_o;
+    assign phase_end = (|req_i) && (vld_req==gnt_o);
     assign round_end = pcnt_pre[PCNT_WIDTH] & phase_end;
 
 
