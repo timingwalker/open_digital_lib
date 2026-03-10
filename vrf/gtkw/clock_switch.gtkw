@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Tue Mar 10 15:54:46 2026
+[*]
+[dumpfile] "/Users/zhehuang/projects/open_digital_lib/vrf/dump.vcd"
+[dumpfile_mtime] "Tue Mar 10 15:48:53 2026"
+[dumpfile_size] 286978
+[savefile] "/Users/zhehuang/projects/open_digital_lib/vrf/gtkw/clock_switch.gtkw"
+[timestart] 9584500
+[size] 1336 600
+[pos] -1 -1
+*-14.788489 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[sst_width] 255
+[signals_width] 136
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@28
+ODL_clock_switch.clk_in0
+ODL_clock_switch.clk_in1
+ODL_clock_switch.rst_n
+ODL_clock_switch.scan_mode
+@200
+-seleck
+@28
+ODL_clock_switch.select_in
+ODL_clock_switch.in0_select
+ODL_clock_switch.in0_select_s
+ODL_clock_switch.in0_select_ss
+@29
+ODL_clock_switch.in1_select
+@28
+ODL_clock_switch.in1_select_s
+ODL_clock_switch.in1_select_ss
+@200
+-clk_out
+@28
+ODL_clock_switch.in0_enable
+ODL_clock_switch.gated_clk_in0
+ODL_clock_switch.in1_enable
+ODL_clock_switch.gated_clk_in1
+ODL_clock_switch.clk_out
+[pattern_trace] 1
+[pattern_trace] 0

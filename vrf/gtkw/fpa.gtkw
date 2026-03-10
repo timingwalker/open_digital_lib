@@ -1,0 +1,22 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Tue Mar 10 15:59:49 2026
+[*]
+[dumpfile] "/Users/zhehuang/projects/open_digital_lib/vrf/dump.vcd"
+[dumpfile_mtime] "Tue Mar 10 15:59:26 2026"
+[dumpfile_size] 745
+[savefile] "/Users/zhehuang/projects/open_digital_lib/vrf/gtkw/fpa.gtkw"
+[timestart] 0
+[size] 1336 600
+[pos] -1 -1
+*-9.718218 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[sst_width] 255
+[signals_width] 111
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@28
+ODL_fpa.req_i[7:0]
+@29
+ODL_fpa.gnt_o[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

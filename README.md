@@ -9,6 +9,7 @@ This repository contains foundational building blocks for digital circuit design
 
 ## module
 
+- **ODL_clock_switch**：glitch-free clock switching circuit
 - **ODL_fpa**：fixed/simple priority arbiter
 - **ODL_wrr**：weighted round robin arbiter
 - **ODL_wrr_fair**：weighted round robin arbiter - fair distribution
@@ -41,6 +42,7 @@ make wave TC=wrr_fair
 
 design 目录下包含设计代码：
 
+- **ODL_clock_switch**：无毛刺时钟切换电路
 - **ODL_fpa**：固定优先级仲裁器
 - **ODL_wrr**：加权轮询仲裁器
 - **ODL_wrr_fair**：近似均匀分布的加权轮询仲裁器
