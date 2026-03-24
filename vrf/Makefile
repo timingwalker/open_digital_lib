@@ -1,14 +1,15 @@
 # This file is public domain, it can be freely copied without restrictions.
 # SPDX-License-Identifier: CC0-1.0
 
-#TC := clock_switch
-#TC := wrr_fair
+TC := wrr_fair
 #TC := wrr
 #TC := fpa
+#TC := clock_switch
 #TC := bin_to_gray
 #TC := bin_to_onehot
 #TC := gray_to_bin
-TC := onehot_to_bin
+#TC := onehot_to_bin
+#TC := aes_128
 
 # defaults
 SIM ?= verilator
@@ -55,6 +56,16 @@ ifeq ($(TC), clock_switch)
     VERILOG_SOURCES += ../design/clk_rst/std_wrap_ckinv.sv
     VERILOG_SOURCES += ../design/clk_rst/std_wrap_ckmux.sv
     VERILOG_SOURCES += ../design/clk_rst/std_wrap_ckor.sv
+endif
+# ======================================================================
+#  aes-128
+# ======================================================================
+ifeq ($(TC), aes_128)
+    VERILOG_SOURCES += ../design/aes_128/ODL_aes_128.v
+    VERILOG_SOURCES += ../design/aes_128/ctrl.v
+    VERILOG_SOURCES += ../design/aes_128/keyexpand.v
+    VERILOG_SOURCES += ../design/aes_128/mixcolum.v
+    VERILOG_SOURCES += ../design/aes_128/sbox.v
 endif
 
 

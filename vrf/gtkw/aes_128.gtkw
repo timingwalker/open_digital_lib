@@ -1,0 +1,29 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Tue Mar 24 14:03:45 2026
+[*]
+[dumpfile] "/Users/zhehuang/projects/open_digital_lib/vrf/dump.vcd"
+[dumpfile_mtime] "Tue Mar 24 14:03:17 2026"
+[dumpfile_size] 59123
+[savefile] "/Users/zhehuang/projects/open_digital_lib/vrf/gtkw/aes_128.gtkw"
+[timestart] 0
+[size] 1336 600
+[pos] -1 -1
+*-17.178255 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[treeopen] ODL_aes_128.
+[sst_width] 255
+[signals_width] 144
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@28
+ODL_aes_128.clk
+ODL_aes_128.rst_n
+@22
+ODL_aes_128.key_in[127:0]
+ODL_aes_128.data_in[127:0]
+@28
+ODL_aes_128.start
+@23
+ODL_aes_128.out[127:0]
+[pattern_trace] 1
+[pattern_trace] 0
