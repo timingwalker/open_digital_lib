@@ -7,12 +7,21 @@
 
 This repository contains foundational building blocks for digital circuit design.
 
-## module
+## module list
 
+#### clock & reset
 - **ODL_clock_switch**：glitch-free clock switching circuit
+- **ODL_rst_sync**：reset synchronizer
+
+#### arbiter
 - **ODL_fpa**：fixed/simple priority arbiter
 - **ODL_wrr**：weighted round robin arbiter
 - **ODL_wrr_fair**：weighted round robin arbiter - fair distribution
+  
+#### encryption
+- **ODL_aes_128**：aes_128 core
+  
+#### encoding conversion
 - **ODL_bin_to_gray**：binary to gray code
 - **ODL_bin_to_onehot**：binary to one-hot code
 - **ODL_gray_to_bin**：gray code to binary
@@ -44,12 +53,19 @@ make wave TC=wrr_fair
 
 ## 模块列表
 
-design 目录下包含设计代码：
-
+#### 时钟复位
 - **ODL_clock_switch**：无毛刺时钟切换电路
+- **ODL_rst_sync**： 复位同步器
+  
+#### 仲裁器
 - **ODL_fpa**：固定优先级仲裁器
 - **ODL_wrr**：加权轮询仲裁器
 - **ODL_wrr_fair**：近似均匀分布的加权轮询仲裁器
+  
+#### 加解密
+- **ODL_aes_128**：aes_128算法核
+
+#### 编码转换
 - **ODL_bin_to_gray**：二进制转格雷码
 - **ODL_bin_to_onehot**：二进制转独热码
 - **ODL_gray_to_bin**：格雷码转二进制
