@@ -1,0 +1,22 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Tue Mar 24 13:07:32 2026
+[*]
+[dumpfile] "/Users/zhehuang/projects/open_digital_lib/vrf/dump.vcd"
+[dumpfile_mtime] "Tue Mar 24 13:06:53 2026"
+[dumpfile_size] 14613
+[savefile] "/Users/zhehuang/projects/open_digital_lib/vrf/gtkw/gray_to_bin.gtkw"
+[timestart] 0
+[size] 1336 600
+[pos] -1 -1
+*-10.880687 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[sst_width] 255
+[signals_width] 120
+[sst_expanded] 1
+[sst_vpaned_height] 159
+@29
+ODL_gray_to_bin.gray_i[7:0]
+@22
+ODL_gray_to_bin.bin_o[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

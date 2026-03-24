@@ -13,6 +13,10 @@ This repository contains foundational building blocks for digital circuit design
 - **ODL_fpa**：fixed/simple priority arbiter
 - **ODL_wrr**：weighted round robin arbiter
 - **ODL_wrr_fair**：weighted round robin arbiter - fair distribution
+- **ODL_bin_to_gray**：binary to gray code
+- **ODL_bin_to_onehot**：binary to one-hot code
+- **ODL_gray_to_bin**：gray code to binary
+- **ODL_onehot_to_bin**：one-hot code to binary
 
 ## simulation
 
@@ -46,6 +50,10 @@ design 目录下包含设计代码：
 - **ODL_fpa**：固定优先级仲裁器
 - **ODL_wrr**：加权轮询仲裁器
 - **ODL_wrr_fair**：近似均匀分布的加权轮询仲裁器
+- **ODL_bin_to_gray**：二进制转格雷码
+- **ODL_bin_to_onehot**：二进制转独热码
+- **ODL_gray_to_bin**：格雷码转二进制
+- **ODL_onehot_to_bin**：独热码转二进制
 
 ## 仿真
 

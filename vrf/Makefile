@@ -4,7 +4,11 @@
 #TC := clock_switch
 #TC := wrr_fair
 #TC := wrr
-TC := fpa
+#TC := fpa
+#TC := bin_to_gray
+#TC := bin_to_onehot
+#TC := gray_to_bin
+TC := onehot_to_bin
 
 # defaults
 SIM ?= verilator
@@ -26,6 +30,21 @@ endif
 ifeq ($(TC), wrr_fair)
     VERILOG_SOURCES += ../design/arbiter/ODL_fpa.sv
     VERILOG_SOURCES += ../design/arbiter/ODL_wrr_fair.sv
+endif
+# ======================================================================
+#  encode
+# ======================================================================
+ifeq ($(TC), bin_to_gray)
+    VERILOG_SOURCES += ../design/encode/ODL_$(TC).sv
+endif
+ifeq ($(TC), bin_to_onehot)
+    VERILOG_SOURCES += ../design/encode/ODL_$(TC).sv
+endif
+ifeq ($(TC), gray_to_bin)
+    VERILOG_SOURCES += ../design/encode/ODL_$(TC).sv
+endif
+ifeq ($(TC), onehot_to_bin)
+    VERILOG_SOURCES += ../design/encode/ODL_$(TC).sv
 endif
 # ======================================================================
 #  clock and reset
