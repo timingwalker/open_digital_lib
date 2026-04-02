@@ -5,12 +5,13 @@
 #TC := wrr
 #TC := fpa
 #TC := clock_switch
-TC := rst_sync
+#TC := rst_sync
 #TC := bin_to_gray
 #TC := bin_to_onehot
 #TC := gray_to_bin
 #TC := onehot_to_bin
 #TC := aes_128
+TC := mult_array_55
 
 # defaults
 SIM ?= verilator
@@ -72,6 +73,10 @@ ifeq ($(TC), aes_128)
     VERILOG_SOURCES += ../design/aes_128/sbox.v
 endif
 
+ifeq ($(TC), mult_array_55)
+    VERILOG_SOURCES += ../design/mult/ODL_mult_array_55.sv
+    VERILOG_SOURCES += ../design/mult/ODL_FA.sv
+endif
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
