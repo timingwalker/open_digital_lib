@@ -77,6 +77,11 @@ ifeq ($(TC), mult_array_55)
     VERILOG_SOURCES += ../design/mult/ODL_mult_array_55.sv
     VERILOG_SOURCES += ../design/mult/ODL_FA.sv
 endif
+ifeq ($(TC), mult_array)
+    VERILOG_SOURCES += ../design/mult/ODL_mult_array.sv
+    VERILOG_SOURCES += ../design/mult/ODL_FA.sv
+    EXTRA_ARGS += -GN=$(N)
+endif
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim

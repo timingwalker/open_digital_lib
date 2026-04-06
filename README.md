@@ -27,6 +27,10 @@ This repository contains foundational building blocks for digital circuit design
 - **ODL_gray_to_bin**：gray code to binary
 - **ODL_onehot_to_bin**：one-hot code to binary
 
+#### multiplier
+- **ODL_mult_array_55**：5×5 array multiplier
+- **ODL_mult_array**：parameterized N×N array multiplier
+
 ## simulation
 
 Requirements：
@@ -70,6 +74,10 @@ make wave TC=wrr_fair
 - **ODL_bin_to_onehot**：二进制转独热码
 - **ODL_gray_to_bin**：格雷码转二进制
 - **ODL_onehot_to_bin**：独热码转二进制
+
+#### 乘法器
+- **ODL_mult_array_55**：5×5 阵列乘法器
+- **ODL_mult_array**：参数化 N×N 阵列乘法器
 
 ## 仿真
 
