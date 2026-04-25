@@ -30,7 +30,7 @@ This repository contains foundational building blocks for digital circuit design
 #### multiplier
 - **ODL_mult_array_55**：5×5 array multiplier
 - **ODL_mult_array**：parameterized N×N array multiplier
-
+- **ODL_mult_booth_33**：33-bit signed multiplier using Modified Booth encoding and Wallace tree compression
 ## simulation
 
 Requirements：
@@ -78,7 +78,7 @@ make wave TC=wrr_fair
 #### 乘法器
 - **ODL_mult_array_55**：5×5 阵列乘法器
 - **ODL_mult_array**：参数化 N×N 阵列乘法器
-
+- **ODL_mult_booth_33**：33-bit 有符号乘法器，采用改进 Booth 编码和 Wallace 树压缩
 ## 仿真
 
 vrf 目录下包含测试用例，需要安装以下开源工具：

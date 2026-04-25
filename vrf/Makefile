@@ -83,6 +83,13 @@ ifeq ($(TC), mult_array)
     EXTRA_ARGS += -GN=$(N)
 endif
 
+ifeq ($(TC), mult_booth_33)
+    VERILOG_SOURCES += ../design/mult/ODL_mult_booth_33.sv
+    VERILOG_SOURCES += ../design/mult/ODL_FA.sv
+    COCOTB_TOPLEVEL = ODL_mult_booth_33
+    COCOTB_TEST_MODULES = test_mult_booth_33
+endif
+
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
 
