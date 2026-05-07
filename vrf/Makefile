@@ -11,9 +11,11 @@
 #TC := gray_to_bin
 #TC := onehot_to_bin
 #TC := aes_128
+#TC := mult_shift_add
 TC := mult_array_55
 
 # defaults
+N ?= 5
 SIM ?= verilator
 TOPLEVEL_LANG ?= verilog
 EXTRA_ARGS += --trace --trace-structs -Wno-fatal
@@ -82,10 +84,13 @@ ifeq ($(TC), mult_array)
     VERILOG_SOURCES += ../design/mult/ODL_FA.sv
     EXTRA_ARGS += -GN=$(N)
 endif
+ifeq ($(TC), mult_shift_add)
+    VERILOG_SOURCES += ../design/mult/ODL_mult_shift_add.sv
+    EXTRA_ARGS += -GN=$(N)
+endif
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim
 
 wave:
 	gtkwave --save=./gtkw/$(TC).gtkw dump.vcd &
-
