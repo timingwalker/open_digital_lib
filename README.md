@@ -31,6 +31,7 @@ This repository contains foundational building blocks for digital circuit design
 - **ODL_mult_array_55**：5×5 array multiplier
 - **ODL_mult_array**：parameterized N×N array multiplier
 - **ODL_mult_shift_add**：parameterized unsigned shift-add multiplier
+- **ODL_mult_bit_serial**：parameterized unsigned bit-serial multiplier
 
 ## simulation
 
@@ -80,6 +81,7 @@ make wave TC=wrr_fair
 - **ODL_mult_array_55**：5×5 阵列乘法器
 - **ODL_mult_array**：参数化 N×N 阵列乘法器
 - **ODL_mult_shift_add**：参数化无符号移位加法乘法器
+- **ODL_mult_bit_serial**：参数化无符号位串行乘法器
 
 ## 仿真
 

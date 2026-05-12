@@ -12,6 +12,7 @@ open_digital_lib is a digital design library. RTL lives under `design/`, and coc
 - Use `_i` suffix for inputs and `_o` suffix for outputs.
 - Use `clk_i` and active-low `rst_ni` for clocked modules when applicable.
 - Prefer `parameter int` for parameterized RTL.
+- Preserve key micro-architecture details from design diagrams, such as pipeline registers, carry/sum propagation, and critical-path breaks. Do not replace them with only functionally equivalent abstractions unless the user explicitly approves the architectural change.
 - For sequential RTL, use one `always_ff` block per registered signal.
 - Internal register names do not need a `_q` suffix.
 - Keep comments concise. Explain algorithm intent or non-obvious logic only.
@@ -30,4 +31,5 @@ open_digital_lib is a digital design library. RTL lives under `design/`, and coc
 - Do not commit generated simulation outputs such as `sim_build/`, `results.xml`, or `dump.vcd`.
 - Update `README.md` when adding a public module.
 - Prefer feature branches and pull requests for new modules or behavioral changes.
+- Before running `git add`, list the files that will be staged and wait for user confirmation.
 - Before creating a git commit, show the proposed commit message to the user and wait for confirmation.

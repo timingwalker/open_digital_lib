@@ -12,6 +12,7 @@
 #TC := onehot_to_bin
 #TC := aes_128
 #TC := mult_shift_add
+#TC := mult_bit_serial
 TC := mult_array_55
 
 # defaults
@@ -86,6 +87,10 @@ ifeq ($(TC), mult_array)
 endif
 ifeq ($(TC), mult_shift_add)
     VERILOG_SOURCES += ../design/mult/ODL_mult_shift_add.sv
+    EXTRA_ARGS += -GN=$(N)
+endif
+ifeq ($(TC), mult_bit_serial)
+    VERILOG_SOURCES += ../design/mult/ODL_mult_bit_serial.sv
     EXTRA_ARGS += -GN=$(N)
 endif
 
