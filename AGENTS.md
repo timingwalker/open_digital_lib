@@ -16,6 +16,7 @@ open_digital_lib is a digital design library. RTL lives under `design/`, and coc
 - For sequential RTL, use one `always_ff` block per registered signal by default. Registers that belong to the same pipeline or state group may share one `always_ff` block when their update conditions are exactly the same.
 - Internal register names do not need a `_q` suffix.
 - Keep comments concise. Explain algorithm intent or non-obvious logic only.
+- For longer RTL modules, group tightly related code by the module's own functional structure using concise section comments in the existing three-line dashed style. `PARAMETER DEFINE` and `SIGNAL DEFINE` are common setup sections; later section names should reflect the specific module behavior rather than a fixed template.
 - Keep file headers accurate. Update `Last Modified` whenever editing a file with that header.
 
 ## Verification
