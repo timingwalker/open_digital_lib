@@ -14,11 +14,11 @@
 // limitations under the License.
 // ----------------------------------------------------------------------
 // Create Date   : 2026-03-25 22:08:05
-// Last Modified : 2026-03-25 22:08:05
+// Last Modified : 2026-05-13 23:34:40
 // Description   : 
 // ----------------------------------------------------------------------
 
-// 半加器
+// Half adder
 module HA (
     input  logic a, b,
     output logic s, co
@@ -27,7 +27,7 @@ module HA (
     assign co = a & b;
 endmodule
 
-// 全加器
+// Full adder
 module FA (
     input  logic a, b, ci,
     output logic s, co
@@ -35,4 +35,3 @@ module FA (
     assign s  = a ^ b ^ ci;
     assign co = (a & b) | (a & ci) | (b & ci);
 endmodule
-

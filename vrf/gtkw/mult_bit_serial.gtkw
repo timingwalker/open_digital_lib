@@ -1,0 +1,61 @@
+[*]
+[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
+[*] Thu May 14 15:35:43 2026
+[*]
+[dumpfile] "/Users/tw/projects/open_digital_lib/vrf/dump.vcd"
+[dumpfile_mtime] "Thu May 14 15:35:09 2026"
+[dumpfile_size] 107313
+[savefile] "/Users/tw/projects/open_digital_lib/vrf/gtkw/mult_bit_serial.gtkw"
+[timestart] 770100
+[size] 1470 801
+[pos] -1 -1
+*-15.037601 825000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[markername] AA
+[markername] BB
+[markername] CC
+[markername] DD
+[markername] EE
+[markername] FF
+[markername] GG
+[markername] HH
+[markername] II
+[markername] JJ
+[markername] KK
+[markername] LL
+[markername] MM
+[markername] NN
+[markername] OO
+[markername] PP
+[markername] QQ
+[markername] RR
+[markername] SS
+[markername] TT
+[markername] UU
+[markername] VV
+[markername] WW
+[markername] XX
+[markername] YY
+[markername] ZZ
+[treeopen] ODL_mult_bit_serial.
+[sst_width] 255
+[signals_width] 193
+[sst_expanded] 1
+[sst_vpaned_height] 272
+@28
+ODL_mult_bit_serial.clk_i
+ODL_mult_bit_serial.rst_ni
+ODL_mult_bit_serial.start_i
+ODL_mult_bit_serial.start_accept
+@24
+ODL_mult_bit_serial.multiplicand_i[4:0]
+@28
+ODL_mult_bit_serial.multiplier_i
+@24
+ODL_mult_bit_serial.partial_product[4:0]
+ODL_mult_bit_serial.cnt[3:0]
+@28
+ODL_mult_bit_serial.valid_o
+@29
+ODL_mult_bit_serial.product_o
+[pattern_trace] 1
+[pattern_trace] 0

@@ -2,7 +2,7 @@ import os
 import random
 
 import cocotb
-from cocotb.triggers import FallingEdge, RisingEdge, Timer
+from cocotb.triggers import RisingEdge, Timer
 
 
 async def generate_clock(dut):
@@ -16,62 +16,53 @@ async def generate_clock(dut):
 async def reset_dut(dut):
     dut.rst_ni.value = 0
     dut.start_i.value = 0
-    dut.x_i.value = 0
-    dut.y_i.value = 0
+    dut.multiplier_i.value = 0
+    dut.multiplicand_i.value = 0
     await Timer(30, unit="ns")
     await RisingEdge(dut.clk_i)
     dut.rst_ni.value = 1
     await RisingEdge(dut.clk_i)
     await Timer(1, unit="ps")
 
-    assert dut.p_o.value == 0
-    assert dut.busy_o.value == 0
-    assert dut.done_o.value == 0
+    assert dut.product_o.value == 0
+    assert dut.valid_o.value == 0
 
 
 async def run_mult_case(dut, n, x_value, y_value, check_busy_start=False):
     expected = x_value * y_value
     expected_bits = [(expected >> i) & 1 for i in range(2 * n)]
-    max_value = (1 << n) - 1
     collision_idx = max(1, n // 2)
 
-    await FallingEdge(dut.clk_i)
+    await RisingEdge(dut.clk_i)
+    await Timer(1, unit="ps")
     dut.start_i.value = 1
-    dut.x_i.value = x_value & 1
-    dut.y_i.value = y_value
+    dut.multiplier_i.value = x_value & 1
+    dut.multiplicand_i.value = y_value
 
     for idx, expected_bit in enumerate(expected_bits):
         await RisingEdge(dut.clk_i)
         await Timer(1, unit="ps")
 
-        assert int(dut.p_o.value) == expected_bit, (
+        assert int(dut.product_o.value) == expected_bit, (
             f"bit {idx} failed for {x_value} * {y_value}: "
-            f"expected {expected_bit}, got {int(dut.p_o.value)}"
+            f"expected {expected_bit}, got {int(dut.product_o.value)}"
         )
 
-        if idx == (2 * n) - 1:
-            assert dut.busy_o.value == 0
-            assert dut.done_o.value == 1
-        else:
-            assert dut.busy_o.value == 1
-            assert dut.done_o.value == 0
+        assert dut.valid_o.value == 1
 
-        await FallingEdge(dut.clk_i)
         next_idx = idx + 1
-        dut.x_i.value = (x_value >> next_idx) & 1 if next_idx < n else 0
+        dut.multiplier_i.value = (x_value >> next_idx) & 1 if next_idx < n else 0
 
         if check_busy_start and next_idx == collision_idx and next_idx < (2 * n) - 1:
             dut.start_i.value = 1
-            dut.y_i.value = max_value
         else:
             dut.start_i.value = 0
-            dut.y_i.value = 0
+
+        dut.multiplicand_i.value = y_value
 
     await RisingEdge(dut.clk_i)
     await Timer(1, unit="ps")
-    assert dut.busy_o.value == 0
-    assert dut.done_o.value == 0
-    assert int(dut.p_o.value) == expected_bits[-1]
+    assert dut.valid_o.value == 0
 
 
 @cocotb.test()

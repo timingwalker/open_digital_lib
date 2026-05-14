@@ -91,6 +91,7 @@ ifeq ($(TC), mult_shift_add)
 endif
 ifeq ($(TC), mult_bit_serial)
     VERILOG_SOURCES += ../design/mult/ODL_mult_bit_serial.sv
+    VERILOG_SOURCES += ../design/mult/ODL_FA.sv
     EXTRA_ARGS += -GN=$(N)
 endif
 

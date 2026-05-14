@@ -14,125 +14,104 @@
 // limitations under the License.
 // ----------------------------------------------------------------------
 // Create Date   : 2026-05-12 23:49:00
-// Last Modified : 2026-05-12 23:55:54
+// Last Modified : 2026-05-14 23:23:13
 // Description   : Parameterized unsigned bit-serial multiplier
 // ----------------------------------------------------------------------
 
 module ODL_mult_bit_serial #(
-    parameter int N = 5
+    parameter int N = 5 // valid range: N >= 1
 )(
      input  logic             clk_i
     ,input  logic             rst_ni
     ,input  logic             start_i
-    ,input  logic             x_i
-    ,input  logic [N-1:0]     y_i
-    ,output logic             p_o
-    ,output logic             busy_o
-    ,output logic             done_o
+    ,input  logic             multiplier_i   // LSB-first; bit 0 is sampled with accepted start_i
+    ,input  logic [N-1:0]     multiplicand_i // keep stable from accepted start_i until valid_o drops
+    ,output logic             product_o
+    ,output logic             valid_o
 );
 
+    // ----------------------------------------------------------------------
+    //  PARAMETER DEFINE
+    // ----------------------------------------------------------------------
     localparam int PRODUCT_WIDTH = 2 * N;
-    localparam int CNT_WIDTH     = (PRODUCT_WIDTH <= 1) ? 1 : $clog2(PRODUCT_WIDTH);
+    localparam int CNT_WIDTH     = $clog2(PRODUCT_WIDTH + 1);
 
-    logic [N-1:0]             y;   // latched parallel multiplicand
-    logic [N-1:0]             acc; // shifted partial product
+    // ----------------------------------------------------------------------
+    //  SIGNAL DEFINE
+    // ----------------------------------------------------------------------
+    logic [N-1:0]             sum_1d;       // registered sum pipeline
+    logic [N-1:0]             carry_1d;     // registered local carry feedback
     logic [CNT_WIDTH-1:0]     cnt;
     logic                     busy;
-    logic                     done;
-    logic                     p;
-
     logic                     start_accept;
-    logic                     iter_valid;
-    logic [CNT_WIDTH-1:0]     iter_idx;
-    logic                     input_phase;
-    logic                     x_bit;
-    logic [N-1:0]             y_for_add;
-    logic [N-1:0]             acc_for_add;
-    logic [N:0]               add_result;
-    logic [N-1:0]             acc_next;
-    logic                     p_next;
+    logic                     multiplier;
+    logic [N-1:0]             partial_product;
+    logic [N-1:0]             sum_1d_shift;
+    logic [N-1:0]             sum;
+    logic [N-1:0]             carry;
     logic                     last_cycle;
 
+
+    // ----------------------------------------------------------------------
+    //  control logic
+    // ----------------------------------------------------------------------
+
     assign start_accept = start_i && ~busy;
-    assign iter_valid   = start_accept || busy;
-    assign iter_idx     = start_accept ? '0 : cnt;
 
-    // Consume x_i for N cycles, then shift out the remaining upper product bits.
-    assign input_phase = ( iter_idx < CNT_WIDTH'(N) );
-    assign x_bit       = input_phase ? x_i : 1'b0;
-
-    // First cycle uses y_i and a cleared accumulator before registers update.
-    assign y_for_add   = start_accept ? y_i : y;
-    assign acc_for_add = start_accept ? '0  : acc;
-    assign add_result  = {1'b0, acc_for_add} + ( x_bit ? {1'b0, y_for_add} : '0 );
-    assign acc_next    = add_result[N:1];
-    assign p_next      = add_result[0];
-    assign last_cycle  = iter_valid && ( iter_idx == CNT_WIDTH'(PRODUCT_WIDTH-1) );
-
-    always_ff @(posedge clk_i, negedge rst_ni) begin
-        if ( ~rst_ni ) begin
-            y <= '0;
-        end
-        else if ( start_accept ) begin
-            y <= y_i;
-        end
-    end
-
-    always_ff @(posedge clk_i, negedge rst_ni) begin
-        if ( ~rst_ni ) begin
-            acc <= '0;
-        end
-        else if ( iter_valid ) begin
-            acc <= acc_next;
-        end
-    end
-
-    always_ff @(posedge clk_i, negedge rst_ni) begin
-        if ( ~rst_ni ) begin
-            cnt <= '0;
-        end
-        else if ( iter_valid ) begin
-            if ( last_cycle ) begin
-                cnt <= '0;
-            end
-            else begin
-                cnt <= iter_idx + CNT_WIDTH'(1);
-            end
-        end
-    end
+    assign last_cycle      = ( cnt == CNT_WIDTH'(PRODUCT_WIDTH) );
 
     always_ff @(posedge clk_i, negedge rst_ni) begin
         if ( ~rst_ni ) begin
             busy <= 1'b0;
         end
         else if ( start_accept ) begin
-            busy <= ~last_cycle;
+            busy <= 1'b1;
         end
-        else if ( busy && last_cycle ) begin
+        else if ( last_cycle ) begin
             busy <= 1'b0;
         end
     end
 
-    always_ff @(posedge clk_i, negedge rst_ni) begin
-        if ( ~rst_ni ) begin
-            done <= 1'b0;
-        end
-        else begin
-            done <= last_cycle;
-        end
+
+    // ----------------------------------------------------------------------
+    //  data path 
+    // ----------------------------------------------------------------------
+    
+    // Consume multiplier_i for N cycles, then shift out the remaining upper product bits.
+    assign multiplier      = ( cnt < CNT_WIDTH'(N) ) ? multiplier_i : 1'b0;
+    assign partial_product = {N{multiplier}} & multiplicand_i;
+
+    // One FA per bit-slice. Sum moves toward product_o; carry feeds back locally.
+    assign sum_1d_shift = sum_1d >> 1;
+    for ( genvar i=0; i<N; i++ ) begin : gen_bit_slice
+        FA U_FA (
+            .a   ( partial_product[i] )
+            ,.b  ( sum_1d_shift[i]    )
+            ,.ci ( carry_1d[i]        )
+            ,.s  ( sum[i]             )
+            ,.co ( carry[i]           )
+        );
     end
 
     always_ff @(posedge clk_i, negedge rst_ni) begin
         if ( ~rst_ni ) begin
-            p <= 1'b0;
+            sum_1d   <= '0;
+            carry_1d <= '0;
+            cnt      <= '0;
         end
-        else if ( iter_valid ) begin
-            p <= p_next;
+        else if ( last_cycle ) begin
+            sum_1d   <= '0;
+            carry_1d <= '0;
+            cnt      <= '0;
+        end
+        else if ( start_accept || busy ) begin
+            sum_1d   <= sum;
+            carry_1d <= carry;
+            cnt      <= cnt + CNT_WIDTH'(1);
         end
     end
 
-    assign p_o    = p;
-    assign busy_o = busy;
-    assign done_o = done;
+    assign product_o = sum_1d[0];
+    assign valid_o   = busy;
 
 endmodule
