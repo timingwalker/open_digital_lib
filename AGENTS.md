@@ -23,6 +23,7 @@ open_digital_lib is a digital design library. RTL lives under `design/`, and coc
 - Add cocotb tests under `vrf/test_<tc>.py`.
 - Add new testcases to `vrf/Makefile` with `TC=<name>`.
 - For parameterized modules, pass parameters through `EXTRA_ARGS += -G<param>=$(<param>)`.
+- Drive cocotb input stimulus after `RisingEdge(clk_i)` plus a small delay to model upstream registers, unless a test explicitly needs a different timing relationship.
 - Run relevant tests before finishing.
 - For parameterized arithmetic modules, test multiple widths when practical, such as `N=5`, `8`, `16`, and `32`.
 
