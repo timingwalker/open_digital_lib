@@ -1,7 +1,57 @@
 # open_digital_lib
 
-- [English](#english)
 - [中文](#中文)
+- [English](#english)
+
+# 中文
+
+本仓库包含用于构建数字芯片的基本模块，[详细介绍](https://mp.weixin.qq.com/s/nQ6PGeMVyil1QYWKGnyz-A)。
+
+## 模块列表
+
+#### 时钟复位
+- **ODL_clock_switch**：无毛刺时钟切换电路
+- **ODL_rst_sync**： 复位同步器
+  
+#### 仲裁器
+- **ODL_fpa**：固定优先级仲裁器
+- **ODL_wrr**：加权轮询仲裁器
+- **ODL_wrr_fair**：近似均匀分布的加权轮询仲裁器
+  
+#### 加解密
+- **ODL_aes_128**：aes_128算法核
+
+#### 编码转换
+- **ODL_bin_to_gray**：二进制转格雷码
+- **ODL_bin_to_onehot**：二进制转独热码
+- **ODL_gray_to_bin**：格雷码转二进制
+- **ODL_onehot_to_bin**：独热码转二进制
+
+#### 乘法器
+- **ODL_mult_array_55**：5×5 阵列乘法器
+- **ODL_mult_array**：参数化 N×N 阵列乘法器
+- **ODL_mult_shift_add**：参数化无符号移位加法乘法器
+- **ODL_mult_bit_serial**：参数化无符号位串行乘法器
+
+## 仿真
+
+vrf 目录下包含测试用例，需要安装以下开源工具：
+
+- verilator
+- cocotb
+- gtkwave
+
+运行测试用例：
+```
+cd vrf
+make clean
+make TC=wrr_fair
+```
+
+查看波形：
+```
+make wave TC=wrr_fair
+```
 
 # English
 
@@ -53,52 +103,3 @@ Check the waveform:
 make wave TC=wrr_fair
 ```
 
-# 中文
-
-本仓库包含用于构建数字芯片的基本模块，[详细介绍](https://mp.weixin.qq.com/s/nQ6PGeMVyil1QYWKGnyz-A)。
-
-## 模块列表
-
-#### 时钟复位
-- **ODL_clock_switch**：无毛刺时钟切换电路
-- **ODL_rst_sync**： 复位同步器
-  
-#### 仲裁器
-- **ODL_fpa**：固定优先级仲裁器
-- **ODL_wrr**：加权轮询仲裁器
-- **ODL_wrr_fair**：近似均匀分布的加权轮询仲裁器
-  
-#### 加解密
-- **ODL_aes_128**：aes_128算法核
-
-#### 编码转换
-- **ODL_bin_to_gray**：二进制转格雷码
-- **ODL_bin_to_onehot**：二进制转独热码
-- **ODL_gray_to_bin**：格雷码转二进制
-- **ODL_onehot_to_bin**：独热码转二进制
-
-#### 乘法器
-- **ODL_mult_array_55**：5×5 阵列乘法器
-- **ODL_mult_array**：参数化 N×N 阵列乘法器
-- **ODL_mult_shift_add**：参数化无符号移位加法乘法器
-- **ODL_mult_bit_serial**：参数化无符号位串行乘法器
-
-## 仿真
-
-vrf 目录下包含测试用例，需要安装以下开源工具：
-
-- verilator
-- cocotb
-- gtkwave
-
-运行测试用例：
-```
-cd vrf
-make clean
-make TC=wrr_fair
-```
-
-查看波形：
-```
-make wave TC=wrr_fair
-```
