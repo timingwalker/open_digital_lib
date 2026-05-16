@@ -1,5 +1,7 @@
 # open_digital_lib
 
+<img src="doc/img/ODL.png" alt="ODL" width="800">
+
 - [中文](#中文)
 - [English](#english)
 
