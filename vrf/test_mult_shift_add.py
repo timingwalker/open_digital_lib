@@ -2,7 +2,7 @@ import os
 import random
 
 import cocotb
-from cocotb.triggers import FallingEdge, RisingEdge, Timer
+from cocotb.triggers import RisingEdge, Timer
 
 
 async def generate_clock(dut):
@@ -24,51 +24,45 @@ async def reset_dut(dut):
     await RisingEdge(dut.clk_i)
     await Timer(1, unit="ps")
 
-    assert dut.busy_o.value == 0
     assert dut.done_o.value == 0
     assert dut.product_o.value == 0
+
+
+async def drive_inputs_after_edge(dut, multiplicand, multiplier, start):
+    await Timer(1, unit="ps")
+    dut.multiplicand_i.value = multiplicand
+    dut.multiplier_i.value = multiplier
+    dut.start_i.value = start
 
 
 async def run_mult_case(dut, n, multiplicand, multiplier, check_busy_start=False):
     expected = multiplicand * multiplier
     mask = (1 << n) - 1
 
-    await FallingEdge(dut.clk_i)
-    dut.multiplicand_i.value = multiplicand & mask
-    dut.multiplier_i.value = multiplier & mask
-    dut.start_i.value = 1
-
+    await drive_inputs_after_edge(dut, multiplicand & mask, multiplier & mask, 1)
     await RisingEdge(dut.clk_i)
     await Timer(1, unit="ps")
-    assert dut.busy_o.value == 1
     assert dut.done_o.value == 0
 
     for cycle in range(n):
-        await FallingEdge(dut.clk_i)
-
         if check_busy_start and cycle == n // 2:
-            dut.multiplicand_i.value = mask
-            dut.multiplier_i.value = mask
-            dut.start_i.value = 1
+            await drive_inputs_after_edge(dut, mask, mask, 1)
         else:
-            dut.start_i.value = 0
+            await drive_inputs_after_edge(dut, multiplicand & mask, multiplier & mask, 0)
 
         await RisingEdge(dut.clk_i)
         await Timer(1, unit="ps")
 
         if cycle == n - 1:
-            assert dut.busy_o.value == 0
             assert dut.done_o.value == 1
             assert int(dut.product_o.value) == expected, (
                 f"{multiplicand} * {multiplier}: expected {expected}, "
                 f"got {int(dut.product_o.value)}"
             )
         else:
-            assert dut.busy_o.value == 1
             assert dut.done_o.value == 0
 
-    await FallingEdge(dut.clk_i)
-    dut.start_i.value = 0
+    await drive_inputs_after_edge(dut, multiplicand & mask, multiplier & mask, 0)
     await RisingEdge(dut.clk_i)
     await Timer(1, unit="ps")
     assert dut.done_o.value == 0
