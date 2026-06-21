@@ -14,80 +14,63 @@
 // limitations under the License.
 // ----------------------------------------------------------------------
 // Create Date   : 2026-03-25 22:08:05
-// Last Modified : 2026-04-06 02:20:00
-// Description   : Parameterized N×N Array Multiplier (Baugh-Wooley Architecture)
-//                 Optimized from ODL_mult_array_55 with generate loops
+// Last Modified : 2026-06-21 15:03:13
+// Description   : Parameterized NxN Array Multiplier 
+//                 Baugh-Wooley Architecture
 // ----------------------------------------------------------------------
 
-// Parameterized N×N Array Multiplier (Baugh-Wooley Architecture)
-// Features:
-// - Supports unsigned (mode=0) and signed (mode=1, two's complement) multiplication
-// - Parameterized bit-width N (default 5, same as original)
-// - Input: N-bit X, N-bit Y; Output: 2*N-bit product P
-// - Mode control: 0 = unsigned, 1 = signed (Baugh-Wooley correction)
-// - Generate loops replace manual instantiation for CSA and CPA stages
 module ODL_mult_array #(
-    parameter int N = 5
+    parameter int N = 5 // valid range: N >= 2
 )(
-    input  logic [N-1:0] X,         // N-bit multiplier
-    input  logic [N-1:0] Y,         // N-bit multiplicand
-    input  logic       mode,        // 0=unsigned, 1=signed
-    output logic [2*N-1:0] P        // 2*N-bit product
+    input  logic [N-1:0]   multiplier_i,   // N-bit multiplier
+    input  logic [N-1:0]   multiplicand_i, // N-bit multiplicand
+    input  logic           mode_i,         // 0=unsigned, 1=signed
+    output logic [2*N-1:0] product_o       // 2*N-bit product
 );
 
-    // ------------------------------------------------------------------
-    // Partial Products: pp[i][j] = X[i] & Y[j]
-    // No Baugh-Wooley correction here; applied at point of use.
-    // ------------------------------------------------------------------
+    // ----------------------------------------------------------------------
+    //  SIGNAL DEFINE
+    // ----------------------------------------------------------------------
     logic [N-1:0][N-1:0] pp;
+    logic [N-1:1][N-1:0] csa_s;
+    logic [N-1:1][N-1:0] csa_c;
+    logic [N-2:0]        cpa_carry;
 
-    genvar i, j;
+    // ----------------------------------------------------------------------
+    //  partial product
+    // ----------------------------------------------------------------------
+    // Baugh-Wooley correction is applied at adder inputs.
     generate
-        for (i = 0; i < N; i++) begin : gen_pp_row
-            for (j = 0; j < N; j++) begin : gen_pp_col
-                assign pp[i][j] = X[i] & Y[j];
+        for (genvar i = 0; i < N; i++) begin : gen_pp_row
+            for (genvar j = 0; j < N; j++) begin : gen_pp_col
+                assign pp[i][j] = multiplier_i[i] & multiplicand_i[j];
             end
         end
     endgenerate
 
-    // ------------------------------------------------------------------
-    // CSA (Carry-Save Adder) Array
-    //   Row 1 (k=1): Half Adders
-    //   Rows 2..N-1 (k=2..N-1): Full Adders
-    //
-    // Row 1, column j:
-    //   j=0:     HA(pp[1][N-1]^mode, mode,       c_prev[0])
-    //   j=N-1:   HA(pp[1][0],      pp[0][N-1]^mode, ...)
-    //   else:    HA(pp[1][N-1-j],  pp[0][j],       ...)
-    //
-    // Row k (2<=k<=N-1), column j:
-    //   j=0, k<N-1:     FA(pp[k][N-1]^mode, 1'b0,          c[k-1][0])
-    //   j=0, k=N-1:     FA(pp[N-1][N-1],   1'b0,          c[N-2][0])
-    //   j>=1, k<N-1:    FA(pp[k][N-1-j],   s[k-1][j-1],   c[k-1][j])
-    //   j>=1, k=N-1:    FA(pp[N-1][N-1-j]^mode, s[N-2][j-1], c[N-2][j])
-    // ------------------------------------------------------------------
-    logic [N-1:1][N-1:0] csa_s;
-    logic [N-1:1][N-1:0] csa_c;
+    // ----------------------------------------------------------------------
+    //  carry-save array
+    // ----------------------------------------------------------------------
 
-    // --- Row 1: Half Adders ---
+    // Row 1 uses HA cells; later rows use FA cells.
     generate
-        for (j = 0; j < N; j++) begin : gen_csa1
+        for (genvar j = 0; j < N; j++) begin : gen_csa1
             if (j == 0) begin : col0
-                HA u_ha (
-                    .a (pp[1][N-1] ^ mode),
-                    .b (mode),
+                HA U_CSA_HA (
+                    .a (pp[1][N-1] ^ mode_i),
+                    .b (mode_i),
                     .s (csa_s[1][0]),
                     .co(csa_c[1][0])
                 );
             end else if (j == 1) begin : col_sign
-                HA u_ha (
+                HA U_CSA_HA (
                     .a (pp[1][N-2]),
-                    .b (pp[0][N-1] ^ mode),
+                    .b (pp[0][N-1] ^ mode_i),
                     .s (csa_s[1][j]),
                     .co(csa_c[1][j])
                 );
             end else begin : col_mid
-                HA u_ha (
+                HA U_CSA_HA (
                     .a (pp[1][N-1-j]),
                     .b (pp[0][N-j]),
                     .s (csa_s[1][j]),
@@ -97,20 +80,19 @@ module ODL_mult_array #(
         end
     endgenerate
 
-    // --- Rows 2..N-1: Full Adders ---
     generate
-        for (i = 2; i < N; i++) begin : gen_csa_row
-            for (j = 0; j < N; j++) begin : gen_csa_col
+        for (genvar i = 2; i < N; i++) begin : gen_csa_row
+            for (genvar j = 0; j < N; j++) begin : gen_csa_col
                 if (j == 0 && i < N-1) begin : fa_sign
-                    FA u_fa (
-                        .a (pp[i][N-1] ^ mode),
+                    FA U_CSA_FA (
+                        .a (pp[i][N-1] ^ mode_i),
                         .b (1'b0),
                         .ci(csa_c[i-1][0]),
                         .s (csa_s[i][0]),
                         .co(csa_c[i][0])
                     );
                 end else if (j == 0 && i == N-1) begin : fa_last_first
-                    FA u_fa (
+                    FA U_CSA_FA (
                         .a (pp[N-1][N-1]),
                         .b (1'b0),
                         .ci(csa_c[N-2][0]),
@@ -118,7 +100,7 @@ module ODL_mult_array #(
                         .co(csa_c[N-1][0])
                     );
                 end else if (i < N-1) begin : fa_mid
-                    FA u_fa (
+                    FA U_CSA_FA (
                         .a (pp[i][N-1-j]),
                         .b (csa_s[i-1][j-1]),
                         .ci(csa_c[i-1][j]),
@@ -126,8 +108,8 @@ module ODL_mult_array #(
                         .co(csa_c[i][j])
                     );
                 end else begin : fa_last_rest
-                    FA u_fa (
-                        .a (pp[N-1][N-1-j] ^ mode),
+                    FA U_CSA_FA (
+                        .a (pp[N-1][N-1-j] ^ mode_i),
                         .b (csa_s[N-2][j-1]),
                         .ci(csa_c[N-2][j]),
                         .s (csa_s[N-1][j]),
@@ -138,53 +120,48 @@ module ODL_mult_array #(
         end
     endgenerate
 
-    // ------------------------------------------------------------------
-    // CPA (Carry-Propagate Adder) — ripple
-    //   j=0:     FA(s[N-1][N-2], c[N-1][N-1],       1'b0)
-    //   1<=j<N-1: FA(s[N-1][N-2-j], c[N-1][N-1-j], cp[j-1])
-    //   j=N-1:   FA(c[N-1][0],    mode,             cp[N-2])
-    //   Output: P[N+j] for j = 0..N-1
-    // ------------------------------------------------------------------
-    logic [N-2:0] cpa_carry;
+    // ----------------------------------------------------------------------
+    //  carry-propagate adder
+    // ----------------------------------------------------------------------
 
+    // Ripple carry stage forms the upper product bits.
     generate
-        for (j = 0; j < N; j++) begin : gen_cpa
+        for (genvar j = 0; j < N; j++) begin : gen_cpa
             if (j == 0) begin : cpa_first
-                FA u_fa (
+                FA U_CPA_FA (
                     .a (csa_s[N-1][N-2]),
                     .b (csa_c[N-1][N-1]),
                     .ci(1'b0),
-                    .s (P[N]),
+                    .s (product_o[N]),
                     .co(cpa_carry[0])
                 );
             end else if (j == N-1) begin : cpa_last
-                FA u_fa (
+                FA U_CPA_FA (
                     .a (csa_c[N-1][0]),
-                    .b (mode),
+                    .b (mode_i),
                     .ci(cpa_carry[j-1]),
-                    .s (P[N+j]),
-                    .co()   // MSB carry unused — product fits in 2*N bits
+                    .s (product_o[N+j]),
+                    .co()   // MSB carry unused - product fits in 2*N bits
                 );
             end else begin : cpa_mid
-                FA u_fa (
+                FA U_CPA_FA (
                     .a (csa_s[N-1][N-2-j]),
                     .b (csa_c[N-1][N-1-j]),
                     .ci(cpa_carry[j-1]),
-                    .s (P[N+j]),
+                    .s (product_o[N+j]),
                     .co(cpa_carry[j])
                 );
             end
         end
     endgenerate
 
-    // ------------------------------------------------------------------
-    // Lower product bits: P[0] from pp[0][0], P[k] from csa_s[k][N-1]
-    // ------------------------------------------------------------------
-    assign P[0] = pp[0][0];
-
+    // ----------------------------------------------------------------------
+    //  product output
+    // ----------------------------------------------------------------------
+    assign product_o[0] = pp[0][0];
     generate
-        for (j = 1; j < N; j++) begin : gen_lower
-            assign P[j] = csa_s[j][N-1];
+        for (genvar j = 1; j < N; j++) begin : gen_lower
+            assign product_o[j] = csa_s[j][N-1];
         end
     endgenerate
 

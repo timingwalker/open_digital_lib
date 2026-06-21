@@ -13,7 +13,7 @@
 #TC := aes_128
 #TC := mult_shift_add
 #TC := mult_bit_serial
-TC := mult_array_55
+TC := mult_array
 
 # defaults
 N ?= 5
@@ -76,10 +76,6 @@ ifeq ($(TC), aes_128)
     VERILOG_SOURCES += ../design/aes_128/sbox.v
 endif
 
-ifeq ($(TC), mult_array_55)
-    VERILOG_SOURCES += ../design/mult/ODL_mult_array_55.sv
-    VERILOG_SOURCES += ../design/mult/ODL_FA.sv
-endif
 ifeq ($(TC), mult_array)
     VERILOG_SOURCES += ../design/mult/ODL_mult_array.sv
     VERILOG_SOURCES += ../design/mult/ODL_FA.sv

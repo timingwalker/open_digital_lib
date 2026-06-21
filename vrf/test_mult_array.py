@@ -45,12 +45,12 @@ async def test_odl_mult_array(dut):
     print(f"===== N={N} Parameterized Array Multiplier =====")
     print(f"===== Running {len(basic_cases)} Basic Boundary Test Cases =====")
     for idx, (x_val, y_val, mode_val, expected) in enumerate(basic_cases):
-        dut.X.value = int_to_logic(x_val, N)
-        dut.Y.value = int_to_logic(y_val, N)
-        dut.mode.value = mode_val
+        dut.multiplier_i.value = int_to_logic(x_val, N)
+        dut.multiplicand_i.value = int_to_logic(y_val, N)
+        dut.mode_i.value = mode_val
         await Timer(1, unit="ns")
 
-        result = p_to_int(dut.P.value, mode_val)
+        result = p_to_int(dut.product_o.value, mode_val)
         assert result == expected, \
             f"Basic case {idx+1} failed: X={x_val}, Y={y_val}, mode={mode_val} | Expected {expected}, Got {result}"
         print(f"Basic case {idx+1:2d} passed: {x_val:>6d} * {y_val:>6d} (mode={mode_val}) = {result}")
@@ -65,11 +65,11 @@ async def test_odl_mult_array(dut):
     for idx in range(n_random):
         x = random.randint(0, unsigned_max)
         y = random.randint(0, unsigned_max)
-        dut.X.value = int_to_logic(x, N)
-        dut.Y.value = int_to_logic(y, N)
-        dut.mode.value = 0
+        dut.multiplier_i.value = int_to_logic(x, N)
+        dut.multiplicand_i.value = int_to_logic(y, N)
+        dut.mode_i.value = 0
         await Timer(1, unit="ns")
-        result = p_to_int(dut.P.value, 0)
+        result = p_to_int(dut.product_o.value, 0)
         if result != x * y:
             print(f"Unsigned case {idx+1} FAIL: {x}*{y}={x*y}, got {result}")
             fail += 1
@@ -79,11 +79,11 @@ async def test_odl_mult_array(dut):
     for idx in range(n_random):
         x = random.randint(signed_min, signed_max)
         y = random.randint(signed_min, signed_max)
-        dut.X.value = int_to_logic(x, N)
-        dut.Y.value = int_to_logic(y, N)
-        dut.mode.value = 1
+        dut.multiplier_i.value = int_to_logic(x, N)
+        dut.multiplicand_i.value = int_to_logic(y, N)
+        dut.mode_i.value = 1
         await Timer(1, unit="ns")
-        result = p_to_int(dut.P.value, 1)
+        result = p_to_int(dut.product_o.value, 1)
         if result != x * y:
             print(f"Signed case {idx+1} FAIL: {x}*{y}={x*y}, got {result}")
             fail += 1
